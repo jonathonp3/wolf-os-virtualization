@@ -1,0 +1,5 @@
+# Create required virtualization groups
+g libvirt-qemu - -
+g virtnetwork  - -
+
+
