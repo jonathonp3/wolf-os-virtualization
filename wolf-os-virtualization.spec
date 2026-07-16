@@ -1,7 +1,7 @@
 # Disable debug packages
 %define debug_package %{nil}
 
-Name:           wolf-os-virtualization-user-enable
+Name:           wolf-os-virtualization
 Version:        1.0.0
 Release:        1%{?dist}
 Summary:        User-Enabled Virtualization Stack for Wolf-OS
@@ -56,6 +56,6 @@ install -p -m 644 %{_sourcedir}/wolf-os-virtualization.tmpfiles %{buildroot}/usr
 
 %changelog
 * Thu Jul 16 2026 Jonathon <jonathon@sirius-os> - 1.0.0-1
-- First Stable Release for wolf-os-virtualization-user-enable
+- First Stable Release for wolf-os-virtualization
 - Verified compatibility with modular libvirt architecture
 

@@ -21,7 +21,7 @@ sudo curl -Lo /etc/yum.repos.d/_copr_jonathonp3-sirius-os.repo https://copr.fedo
 ## Option A: Virtualization Stack (requires user action after install)
 
 ```bash
-rpm-ostree install wolf-os-virtualization-user-enable
+rpm-ostree install wolf-os-virtualization
 ```
 
 Reboot to apply changes
@@ -69,7 +69,7 @@ yaml
 ```bash
   - type: rpm-ostree
     install:
-      - wolf-os-virtualization-user-enable
+      - wolf-os-virtualization
 ```
 
 Option B: Auto via vendor-layer symlinks
@@ -78,7 +78,7 @@ Option B: Auto via vendor-layer symlinks
 ```bash
   - type: rpm-ostree
     install:
-      - wolf-os-virtualization-user-enable
+      - wolf-os-virtualization-vendor-symlinks
 ```
 
 Choose Option A if you prefer enabling services manually during the build or after the image is deployed , or Option B if you want them started on boot via vendor-layer systemd enablement.
