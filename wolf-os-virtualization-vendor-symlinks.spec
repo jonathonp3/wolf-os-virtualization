@@ -23,7 +23,6 @@ Requires:       virt-manager
 Requires:       virt-viewer
 
 %description
-%description
 Provides the full libvirt/virtnetworkd runtime foundation for Wolf-OS.
 
 This package uses hard-coded vendor-layer systemd symlinks and declared systemd dependencies to ensure the required services are started on boot.
