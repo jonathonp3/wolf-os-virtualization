@@ -91,8 +91,6 @@ ln -sf ../virtnodedevd.socket %{buildroot}/usr/lib/systemd/system/sockets.target
 
 
 # Changelog must have a corresponding entry for that exact version and release
-# E.g. For Version: 1.0.0, Release: 1%{?dist}, entry will be 1.0.0-1, Next build would be 1.0.0-2, Change Release: 2%{?dist}
-
 # Upgrade Path in COPR
 # Open COPR: Go to your project dashboard.
 # Builds > New Build > SCM >  Clone url: https://github.com/jonathonp3/sirius-os-virtualization > Committish: Main > 
