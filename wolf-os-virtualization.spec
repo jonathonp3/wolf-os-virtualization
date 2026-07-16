@@ -15,7 +15,6 @@ Source1:        wolf-os-virtualization.tmpfiles
 
 # --- DEPENDENCIES ---
 # Explicit systemd requirement (Matches your working PIA build)
-Requires:       systemd
 Requires:       libvirt-daemon-config-network
 Requires:       libvirt-daemon-kvm
 Requires:       qemu-kvm
@@ -23,7 +22,6 @@ Requires:       virt-install
 Requires:       virt-manager
 Requires:       virt-viewer
 
-%description
 %description
 Provides the full libvirt/virtnetworkd runtime foundation for Wolf-OS.
 User intervention is required where services are enabled in the new deployment.
