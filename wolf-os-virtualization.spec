@@ -28,12 +28,6 @@ Requires:       virt-viewer
 Provides the full libvirt/virtnetworkd runtime foundation for Wolf-OS.
 User intervention is required where services are enabled in the new deployment.
 
-sudo systemctl enable virtqemud.service
-sudo systemctl enable virtlogd.service
-sudo systemctl enable virtnetworkd.service
-sudo systemctl enable virtstoraged.service
-sudo systemctl enable virtnodedevd.socket
-
 %setup -c -T
 
 %build
