@@ -6,7 +6,7 @@ This RPM adds the libvirt networking runtime foundation needed for virt-manager 
 
 With these changes, virtnetworkd.service starts cleanly and runs dnsmasq, so libvirt networking behaves as it should. For my use case, manually creating a bridge is no longer necessary.
 
-This project is built and hosted via [Fedora COPR](https://copr.fedorainfracloud.org/coprs/jonathonp3/sirius-os/). 
+This project is built and hosted via [Fedora COPR](https://copr.fedorainfracloud.org/coprs/jonathonp3/wolf-os/). 
 
 📦 Installation
 
@@ -15,7 +15,7 @@ This project is built and hosted via [Fedora COPR](https://copr.fedorainfracloud
 Add the COPR repository, then layer the package:
 
 ```bash
-sudo curl -Lo /etc/yum.repos.d/_copr_jonathonp3-sirius-os.repo https://copr.fedorainfracloud.org/coprs/jonathonp3/sirius-os/repo/fedora-44/jonathonp3-sirius-os-fedora-44.repo
+sudo curl -Lo /etc/yum.repos.d/_copr_jonathonp3-wolf-os.repo https://copr.fedorainfracloud.org/coprs/jonathonp3/wolf-os/repo/fedora-44/jonathonp3-wolf-os-fedora-44.repo
 ```
 
 ## Option A: Virtualization Stack (requires user action after install)
@@ -61,7 +61,7 @@ If you’re building your own image with BlueBuild, add the COPR repository in y
 
 Repository URL:
 ```bash
-https://copr.fedorainfracloud.org/coprs/jonathonp3/sirius-os/repo/fedora-44/jonathonp3-sirius-os-fedora-44.repo
+https://copr.fedorainfracloud.org/coprs/jonathonp3/wolf-os/repo/fedora-44/jonathonp3-wolf-os-fedora-44.repo
 ```
 
 Option A: User-enable after install
