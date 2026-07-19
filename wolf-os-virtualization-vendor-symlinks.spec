@@ -3,7 +3,7 @@
 
 Name:           wolf-os-virtualization-vendor-symlinks
 Version:        1.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Hard-Enabled Virtualization Stack for Wolf-OS
 License:        GPLv3
 URL:            https://github.com/jonathonp3/wolf-os-virtualization
@@ -97,7 +97,7 @@ ln -sf ../virtnodedevd.socket %{buildroot}/usr/lib/systemd/system/sockets.target
 # Spec File: > Chroots: fedora-44-x86_64 > Other options: Enable internet access during this build
 # Build: Run a new build
 %changelog
-* Thu Jul 16 2026 Jonathon <jonathon@sirius-os> - 1.0.0-1
+* Thu Jul 16 2026 Jonathon <jonathon@sirius-os> - 1.0.0-2
 - First Stable Release for Sirius-OS Virtualization
 - Implemented hard-wired vendor symlinks for zero-touch enablement
 - Verified compatibility with modular libvirt architecture

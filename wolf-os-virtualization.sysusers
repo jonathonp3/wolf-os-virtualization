@@ -1,5 +1,4 @@
 # Create required virtualization groups
-g kvm - -
 g libvirt-qemu - -
 g virtnetwork  - -
 
