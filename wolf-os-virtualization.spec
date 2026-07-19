@@ -3,7 +3,7 @@
 
 Name:           wolf-os-virtualization
 Version:        1.0.0
-Release:        3%{?dist}
+Release:        1%{?dist}
 Summary:        User-Enabled Virtualization Stack for Wolf-OS
 License:        GPLv3
 URL:            https://github.com/jonathonp3/wolf-os-virtualization
@@ -47,12 +47,6 @@ install -p -m 644 %{_sourcedir}/wolf-os-virtualization.tmpfiles %{buildroot}/usr
 /usr/lib/tmpfiles.d/wolf-os-virtualization.conf
 
 %changelog
-* Thu Jul 16 2026 Jonathon <jonathon@sirius-os> - 1.0.0-3
-- refactor(sysusers): remove redundant kvm group definition
-
-* Sun Jul 19 2026 Jonathon <jonathon@sirius-os> - 1.0.0-2
-- fix: define kvm group to enable declarative user membership
-
 * Thu Jul 16 2026 Jonathon <jonathon@sirius-os> - 1.0.0-1
 - First Stable Release for wolf-os-virtualization
 - Verified compatibility with modular libvirt architecture
