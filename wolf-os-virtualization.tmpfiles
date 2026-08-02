@@ -4,3 +4,11 @@ d /var/lib/libvirt 0755 root virtnetwork -
 d /var/lib/libvirt/dnsmasq 0775 root virtnetwork -
 d /var/lib/libvirt/network 0775 root virtnetwork -
 
+# Create necessary directories
+d /etc/libvirt/qemu/networks/autostart 0755 root root -
+
+# Force our custom network definition and enable autostart
+L /etc/libvirt/qemu/networks/default.xml - - - - /usr/lib/wolf-os/default-net.xml
+L /etc/libvirt/qemu/networks/autostart/default.xml - - - - /etc/libvirt/qemu/networks/default.xml
+
+
