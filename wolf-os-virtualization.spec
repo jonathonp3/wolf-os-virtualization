@@ -33,10 +33,12 @@ User intervention is required where services are enabled in the new deployment.
 # No build needed
 
 %install
+# Create vendor-layer directories (/usr/lib) instead of /etc
 mkdir -p %{buildroot}/usr/lib/sysusers.d
 mkdir -p %{buildroot}/usr/lib/tmpfiles.d
 mkdir -p %{buildroot}/usr/lib/firewalld/zones
 
+# Install files to the vendor layer
 install -p -m 644 %{_sourcedir}/wolf-os-virtualization.sysusers %{buildroot}/usr/lib/sysusers.d/wolf-os-virtualization.conf
 install -p -m 644 %{_sourcedir}/wolf-os-virtualization.tmpfiles %{buildroot}/usr/lib/tmpfiles.d/wolf-os-virtualization.conf
 install -p -m 644 %{_sourcedir}/wolf-os-virtualization-libvirt.xml %{buildroot}/usr/lib/firewalld/zones/wolf-libvirt.xml
