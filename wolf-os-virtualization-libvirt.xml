@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <zone>
-  <short>wolf-libvirt</short>
+  <short>libvirt</short>
   <description>Wolf-OS virtualization zone - DHCP/DNS for virbr0</description>
   <interface name="virbr0"/>
   <service name="dhcp"/>

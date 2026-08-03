@@ -3,7 +3,7 @@
 
 Name:           wolf-os-virtualization
 Version:        1.0.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        User-Enabled Virtualization Stack for Wolf-OS
 License:        GPLv3
 URL:            https://github.com/jonathonp3/wolf-os-virtualization
@@ -42,16 +42,23 @@ mkdir -p %{buildroot}/usr/lib/wolf-os
 
 install -p -m 644 %{_sourcedir}/wolf-os-virtualization.sysusers %{buildroot}/usr/lib/sysusers.d/wolf-os-virtualization.conf
 install -p -m 644 %{_sourcedir}/wolf-os-virtualization.tmpfiles %{buildroot}/usr/lib/tmpfiles.d/wolf-os-virtualization.conf
-install -p -m 644 %{_sourcedir}/wolf-os-virtualization-libvirt.xml %{buildroot}/usr/lib/firewalld/zones/wolf-libvirt.xml
+install -p -m 644 %{_sourcedir}/wolf-os-virtualization-libvirt.xml %{buildroot}/usr/lib/firewalld/zones/libvirt.xml
 install -p -m 644 %{_sourcedir}/wolf-os-default-net.xml %{buildroot}/usr/lib/wolf-os/default-net.xml
 
 %files
 /usr/lib/sysusers.d/wolf-os-virtualization.conf
 /usr/lib/tmpfiles.d/wolf-os-virtualization.conf
-/usr/lib/firewalld/zones/wolf-libvirt.xml
+/usr/lib/firewalld/zones/libvirt.xml
 /usr/lib/wolf-os/default-net.xml
 
 %changelog
+* Mon Aug 03 2026 Jonathon <jonathon@sirius-os> - 1.1.0-3
+- Implement authoritative libvirt zone masking in the vendor layer
+- Fix virbr0 overwrite /usr/lib/firewalld/zones/libvirt.xml
+- Enforce Workstation-accurate permissions (0700/0600) for network configs via tmpfiles
+- Finalized nested virtualization with 192.168.100.0/24 subnet
+- Ensure zero-touch bridge initialization on initial deployment boot
+
 * Mon Aug 03 2026 Jonathon <jonathon@sirius-os> - 1.1.0-2
 - Implement declarative firewalld zone (wolf-libvirt) in the vendor layer
 - Shift default virtual network to 192.168.100.0/24 to prevent nested VM conflicts
