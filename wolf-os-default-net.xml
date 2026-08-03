@@ -1,4 +1,5 @@
-<network>
+<?xml version="1.0" encoding="utf-8"?>
+<network xmlns:dnsmasq='http://libvirt.org/schemas/network/dnsmasq/1.0'>
   <name>default</name>
   <forward mode='nat'/>
   <bridge name='virbr0' stp='on' delay='0'/>
@@ -8,4 +9,5 @@
     </dhcp>
   </ip>
 </network>
+
 

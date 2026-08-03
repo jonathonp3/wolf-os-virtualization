@@ -4,11 +4,19 @@ d /var/lib/libvirt 0755 root virtnetwork -
 d /var/lib/libvirt/dnsmasq 0775 root virtnetwork -
 d /var/lib/libvirt/network 0775 root virtnetwork -
 
-# Create necessary directories
-d /etc/libvirt/qemu/networks/autostart 0755 root root -
+# 1. REMOVE any existing conflicting network files in /etc
+r /etc/libvirt/qemu/networks/default.xml - - - -
+r /etc/libvirt/qemu/networks/autostart/default.xml - - - -
 
-# Force our custom network definition and enable autostart
-L /etc/libvirt/qemu/networks/default.xml - - - - /usr/lib/wolf-os/default-net.xml
-L /etc/libvirt/qemu/networks/autostart/default.xml - - - - /etc/libvirt/qemu/networks/default.xml
+# 2. CREATE directories with 0700 (drwx------) as seen on Workstation
+d /etc/libvirt/qemu/networks 0700 root root -
+d /etc/libvirt/qemu/networks/autostart 0700 root root -
+
+# 3. COPY config with 0600 (-rw-------) as seen on Workstation
+C /etc/libvirt/qemu/networks/default.xml 0600 root root - /usr/lib/wolf-os/default-net.xml
+
+# 4. RESTORE the autostart symlink
+L /etc/libvirt/qemu/networks/autostart/default.xml - - - - ../default.xml
+
 
 
