@@ -3,7 +3,7 @@
 
 Name:           wolf-os-virtualization
 Version:        1.0.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        User-Enabled Virtualization Stack for Wolf-OS
 License:        GPLv3
 URL:            https://github.com/jonathonp3/wolf-os-virtualization
@@ -13,7 +13,11 @@ BuildArch:      noarch
 Source0:        wolf-os-virtualization.sysusers
 Source1:        wolf-os-virtualization.tmpfiles
 Source2:        wolf-os-virtualization-libvirt.xml
-Source3:        wolf-os-default-net.xml
+Source3:        wolf-os-virtualization-default-net.xml
+Source4:        wolf-os-virtualization-container-http.xml
+Source5:        wolf-os-virtualization-container-https.xml
+Source6:        wolf-os-virtualization-container-https-alt.xml
+Source7:        wolf-os-virtualization-quick-share.xml
 
 # --- DEPENDENCIES ---
 Requires:       libvirt-daemon-config-network
@@ -28,6 +32,15 @@ Requires:       firewalld
 Provides the full libvirt/virtnetworkd runtime foundation for Wolf-OS. Includes a custom firewalld zone (wolf-libvirt) 
 User intervention is required where services are enabled in the new deployment.
 
+Overrides the system libvirt firewalld zone with a development-friendly version:
+- DHCP/DNS/TFTP/SSH services
+- HTTP/HTTPS for web development
+- Container services: 8080, 8443, 8090
+- Quick-share ports: 8000, 5000, 3000
+- Masquerade for internet access
+- Reject rule for host protection
+- Laptop-friendly - works on WiFi/Ethernet/hotspots
+
 %setup -c -T
 
 %build
@@ -38,20 +51,44 @@ User intervention is required where services are enabled in the new deployment.
 mkdir -p %{buildroot}/usr/lib/sysusers.d
 mkdir -p %{buildroot}/usr/lib/tmpfiles.d
 mkdir -p %{buildroot}/usr/lib/firewalld/zones
+mkdir -p %{buildroot}/etc/firewalld/services
 mkdir -p %{buildroot}/usr/lib/wolf-os
 
+# Install sysusers and tmpfiles
 install -p -m 644 %{_sourcedir}/wolf-os-virtualization.sysusers %{buildroot}/usr/lib/sysusers.d/wolf-os-virtualization.conf
 install -p -m 644 %{_sourcedir}/wolf-os-virtualization.tmpfiles %{buildroot}/usr/lib/tmpfiles.d/wolf-os-virtualization.conf
+
+# Install firewalld zone
 install -p -m 644 %{_sourcedir}/wolf-os-virtualization-libvirt.xml %{buildroot}/usr/lib/firewalld/zones/libvirt.xml
-install -p -m 644 %{_sourcedir}/wolf-os-default-net.xml %{buildroot}/usr/lib/wolf-os/default-net.xml
+
+# Install firewalld services
+install -p -m 644 %{_sourcedir}/wolf-os-virtualization-container-http.xml %{buildroot}/etc/firewalld/services/container-http.xml
+install -p -m 644 %{_sourcedir}/wolf-os-virtualization-container-https.xml %{buildroot}/etc/firewalld/services/container-https.xml
+install -p -m 644 %{_sourcedir}/wolf-os-virtualization-container-https-alt.xml %{buildroot}/etc/firewalld/services/container-https-alt.xml
+install -p -m 644 %{_sourcedir}/wolf-os-virtualization-quick-share.xml %{buildroot}/etc/firewalld/services/quick-share.xml
+
+# Default system network configuration
+install -p -m 644 %{_sourcedir}/wolf-os-virtualization-default-net.xml %{buildroot}/usr/lib/wolf-os/default-net.xml
 
 %files
 /usr/lib/sysusers.d/wolf-os-virtualization.conf
 /usr/lib/tmpfiles.d/wolf-os-virtualization.conf
 /usr/lib/firewalld/zones/libvirt.xml
 /usr/lib/wolf-os/default-net.xml
+/etc/firewalld/services/container-http.xml
+/etc/firewalld/services/container-https.xml
+/etc/firewalld/services/container-https-alt.xml
+/etc/firewalld/services/quick-share.xml
 
 %changelog
+* Mon Aug 03 2026 Jonathon <jonathon@sirius-os> - 1.0.0-4
+- Override system libvirt zone with wolf-libvirt configuration
+- Add: Quick-share service (ports 8000, 5000, 3000)
+- Add: Container services (8080, 8443, 8090)
+- Add: HTTP/HTTPS services for web development
+- Add: Reject rule for host protection
+- Works with libvirt default network on 192.168.100.0/24
+
 * Mon Aug 03 2026 Jonathon <jonathon@sirius-os> - 1.1.0-3
 - Implement authoritative libvirt zone masking in the vendor layer
 - Fix virbr0 overwrite /usr/lib/firewalld/zones/libvirt.xml

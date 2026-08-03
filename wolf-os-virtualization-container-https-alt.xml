@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>Container HTTPS Alt</short>
+  <description>Alternative Container HTTPS service on port 8090</description>
+  <port protocol="tcp" port="8090"/>
+</service>

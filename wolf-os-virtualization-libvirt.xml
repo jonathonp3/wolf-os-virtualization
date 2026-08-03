@@ -1,10 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<zone>
-  <short>libvirt</short>
-  <description>Wolf-OS virtualization zone - DHCP/DNS for virbr0</description>
+<zone target="ACCEPT">
+  <short>wolf-libvirt</short>
+  <description>Wolf-OS virtualization zone - DHCP/DNS with HTTP/HTTPS, containers, and quick-share</description>
+  
   <interface name="virbr0"/>
-  <service name="dhcp"/>
-  <service name="dns"/>
-  <service name="tftp"/>
+  
+  <!-- Essential services -->
+  <service name='dhcp'/>
+  <service name='dns'/>
+  <service name='ssh'/>
+  <service name='tftp'/>
+  
+  <!-- Web development -->
+  <service name='http'/>
+  <service name='https'/>
+  
+  <!-- Container services -->
+  <service name='container-http'/>
+  <service name='container-https'/>
+  <service name='container-https-alt'/>
+  
+  <!-- Quick-share ports -->
+  <service name='quick-share'/>
+  
+  <!-- Protocols -->
+  <protocol value='icmp'/>
+  <protocol value='ipv6-icmp'/>
+  
+  <!-- NAT for internet access -->
   <masquerade/>
+  
+  <!-- Reject rule protects the host -->
+  <rule priority='32767'>
+    <reject/>
+  </rule>
 </zone>
