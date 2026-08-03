@@ -50,7 +50,7 @@ Overrides the system libvirt firewalld zone with a development-friendly version:
 # Create vendor-layer directories (/usr/lib) instead of /etc
 mkdir -p %{buildroot}/usr/lib/sysusers.d
 mkdir -p %{buildroot}/usr/lib/tmpfiles.d
-mkdir -p %{buildroot}/usr/lib/firewalld/zones
+mkdir -p %{buildroot}/etc/firewalld/zones
 mkdir -p %{buildroot}/etc/firewalld/services
 mkdir -p %{buildroot}/usr/lib/wolf-os
 
