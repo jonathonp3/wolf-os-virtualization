@@ -3,7 +3,7 @@
 
 Name:           wolf-os-virtualization
 Version:        1.0.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        User-Enabled Virtualization Stack for Wolf-OS
 License:        GPLv3
 URL:            https://github.com/jonathonp3/wolf-os-virtualization
@@ -18,6 +18,10 @@ Source4:        wolf-os-virtualization-container-http.xml
 Source5:        wolf-os-virtualization-container-https.xml
 Source6:        wolf-os-virtualization-container-https-alt.xml
 Source7:        wolf-os-virtualization-quick-share.xml
+Source8:        wolf-os-virtualization-libvirt-provisioning.sh
+Source9:        wolf-os-virtualization-libvirt-provision.service
+Source10:       wolf-os-virtualization-uninstall-provision.sh
+Source11:       wolf-os-virtualization-uninstall-provision.service
 
 # --- DEPENDENCIES ---
 Requires:       libvirt-daemon-config-network
@@ -27,12 +31,11 @@ Requires:       virt-install
 Requires:       virt-manager
 Requires:       virt-viewer
 Requires:       firewalld
+Requires:       systemd
 
 %description
-Provides the full libvirt/virtnetworkd runtime foundation for Wolf-OS. Includes a custom firewalld zone (wolf-libvirt) 
-User intervention is required where services are enabled in the new deployment.
-
-Overrides the system libvirt firewalld zone with a development-friendly version:
+Provides the full libvirt/virtnetworkd runtime foundation for Wolf-OS.
+Includes a custom firewalld zone (wolf-libvirt) with development-friendly features:
 - DHCP/DNS/TFTP/SSH services
 - HTTP/HTTPS for web development
 - Container services: 8080, 8443, 8090
@@ -40,6 +43,7 @@ Overrides the system libvirt firewalld zone with a development-friendly version:
 - Masquerade for internet access
 - Reject rule for host protection
 - Laptop-friendly - works on WiFi/Ethernet/hotspots
+- Clean uninstall via systemd dormant service
 
 %setup -c -T
 
@@ -47,65 +51,89 @@ Overrides the system libvirt firewalld zone with a development-friendly version:
 # No build needed
 
 %install
-# Create vendor-layer directories (/usr/lib) instead of /etc
+# Create directories
 mkdir -p %{buildroot}/usr/lib/sysusers.d
 mkdir -p %{buildroot}/usr/lib/tmpfiles.d
-mkdir -p %{buildroot}/etc/firewalld/zones
-mkdir -p %{buildroot}/etc/firewalld/services
-mkdir -p %{buildroot}/usr/lib/wolf-os
+mkdir -p %{buildroot}/usr/share/wolf-os
+mkdir -p %{buildroot}/usr/libexec
+mkdir -p %{buildroot}/usr/lib/systemd/system
+mkdir -p %{buildroot}/usr/lib/systemd/system/multi-user.target.wants
 
 # Install sysusers and tmpfiles
-install -p -m 644 %{_sourcedir}/wolf-os-virtualization.sysusers %{buildroot}/usr/lib/sysusers.d/wolf-os-virtualization.conf
-install -p -m 644 %{_sourcedir}/wolf-os-virtualization.tmpfiles %{buildroot}/usr/lib/tmpfiles.d/wolf-os-virtualization.conf
+install -p -m 644 %{SOURCE0} %{buildroot}/usr/lib/sysusers.d/wolf-os-virtualization.conf
+install -p -m 644 %{SOURCE1} %{buildroot}/usr/lib/tmpfiles.d/wolf-os-virtualization.conf
 
-# Install firewalld zone
-install -p -m 644 %{_sourcedir}/wolf-os-virtualization-libvirt.xml %{buildroot}/etc/firewalld/zones/libvirt.xml  
+# Install source templates to /usr/share/wolf-os/
+install -p -m 644 %{SOURCE2} %{buildroot}/usr/share/wolf-os/libvirt.xml
+install -p -m 644 %{SOURCE3} %{buildroot}/usr/share/wolf-os/default-net.xml
+install -p -m 644 %{SOURCE4} %{buildroot}/usr/share/wolf-os/container-http.xml
+install -p -m 644 %{SOURCE5} %{buildroot}/usr/share/wolf-os/container-https.xml
+install -p -m 644 %{SOURCE6} %{buildroot}/usr/share/wolf-os/container-https-alt.xml
+install -p -m 644 %{SOURCE7} %{buildroot}/usr/share/wolf-os/quick-share.xml
 
-# Install firewalld services
-install -p -m 644 %{_sourcedir}/wolf-os-virtualization-container-http.xml %{buildroot}/etc/firewalld/services/container-http.xml
-install -p -m 644 %{_sourcedir}/wolf-os-virtualization-container-https.xml %{buildroot}/etc/firewalld/services/container-https.xml
-install -p -m 644 %{_sourcedir}/wolf-os-virtualization-container-https-alt.xml %{buildroot}/etc/firewalld/services/container-https-alt.xml
-install -p -m 644 %{_sourcedir}/wolf-os-virtualization-quick-share.xml %{buildroot}/etc/firewalld/services/quick-share.xml
+# Install provisioning scripts
+install -p -m 755 %{SOURCE8} %{buildroot}/usr/libexec/wolf-os-virtualization-libvirt-provisioning.sh
+install -p -m 755 %{SOURCE10} %{buildroot}/usr/libexec/wolf-os-virtualization-uninstall-provision.sh
 
-# Default system network configuration
-install -p -m 644 %{_sourcedir}/wolf-os-virtualization-default-net.xml %{buildroot}/usr/lib/wolf-os/default-net.xml
+# Install systemd services
+install -p -m 644 %{SOURCE9} %{buildroot}/usr/lib/systemd/system/wolf-os-virtualization-libvirt-provision.service
+install -p -m 644 %{SOURCE11} %{buildroot}/usr/lib/systemd/system/wolf-os-virtualization-uninstall-provision.service
+
+# Enable Services via Symlinks
+ln -sf ../wolf-os-virtualization-libvirt-provision.service %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/wolf-os-virtualization-libvirt-provision.service
+ln -sf ../wolf-os-virtualization-uninstall-provision.service %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/wolf-os-virtualization-uninstall-provision.service
+
+%post
+# Reload systemd to pick up new services
+systemctl daemon-reload 2>/dev/null || :
+
+%postun
+# Reload systemd after removal
+systemctl daemon-reload 2>/dev/null || :
 
 %files
 /usr/lib/sysusers.d/wolf-os-virtualization.conf
 /usr/lib/tmpfiles.d/wolf-os-virtualization.conf
-/etc/firewalld/zones/libvirt.xml 
-/usr/lib/wolf-os/default-net.xml
-/etc/firewalld/services/container-http.xml
-/etc/firewalld/services/container-https.xml
-/etc/firewalld/services/container-https-alt.xml
-/etc/firewalld/services/quick-share.xml
+/usr/share/wolf-os/libvirt.xml
+/usr/share/wolf-os/default-net.xml
+/usr/share/wolf-os/container-http.xml
+/usr/share/wolf-os/container-https.xml
+/usr/share/wolf-os/container-https-alt.xml
+/usr/share/wolf-os/quick-share.xml
+/usr/libexec/wolf-os-virtualization-libvirt-provisioning.sh
+/usr/libexec/wolf-os-virtualization-uninstall-provision.sh
+/usr/lib/systemd/system/wolf-os-virtualization-libvirt-provision.service
+/usr/lib/systemd/system/wolf-os-virtualization-uninstall-provision.service
+/usr/lib/systemd/system/multi-user.target.wants/wolf-os-virtualization-libvirt-provision.service
+/usr/lib/systemd/system/multi-user.target.wants/wolf-os-virtualization-uninstall-provision.service
+
+%changelog
+* Mon Aug 03 2026 Jonathon <jonathon@sirius-os> - 1.0.0-6
+- Fix: Add missing Source10 and Source11 definitions
+- Fix: Correct install paths for uninstall service
+- Fix: Add %post and %postun for systemd daemon-reload
+- Fix: Add uninstall service to %files
+- Fix: Typo "Virtualaziation" → "Virtualization"
+- Add: Firewalld reload to uninstall script
+- Add: Call uninstall provision from main provision script
 
 %changelog
 * Mon Aug 03 2026 Jonathon <jonathon@sirius-os> - 1.0.0-5
-- Fix: Install zone to /etc/firewalld/zones/ instead of /usr/lib
-- This allows override without conflicting with base firewalld package
-- Add %post and %postun to reload firewalld
-
-* Mon Aug 03 2026 Jonathon <jonathon@sirius-os> - 1.0.0-4
-- Override system libvirt zone with wolf-libvirt configuration
-- Add: Quick-share service (ports 8000, 5000, 3000)
-- Add: Container services (8080, 8443, 8090)
-- Add: HTTP/HTTPS services for web development
-- Add: Reject rule for host protection
-- Works with libvirt default network on 192.168.100.0/24
-
-* Mon Aug 03 2026 Jonathon <jonathon@sirius-os> - 1.1.0-3
-- Implement authoritative libvirt zone masking in the vendor layer
-- Fix virbr0 overwrite /usr/lib/firewalld/zones/libvirt.xml
-- Enforce Workstation-accurate permissions (0700/0600) for network configs via tmpfiles
-- Finalized nested virtualization with 192.168.100.0/24 subnet
-- Ensure zero-touch bridge initialization on initial deployment boot
-
-* Mon Aug 03 2026 Jonathon <jonathon@sirius-os> - 1.1.0-2
-- Implement declarative firewalld zone (wolf-libvirt) in the vendor layer
-- Shift default virtual network to 192.168.100.0/24 to prevent nested VM conflicts
-- Add tmpfiles.d logic for zero-touch network autostart on first boot
-- Verified successful bridge initialization on Atomic deployments
+- Complete rewrite using my PIA-style systemd provisioning (Silverblue/Atomic compatible)
+  - Main provision service runs at boot to copy configs from /usr/share/wolf-os/ to /etc
+  - Uninstall provision service creates dormant uninstall service at runtime
+  - Clean uninstall removes all traces when package is removed
+- Custom libvirt firewalld zone with development-friendly features:
+  - DHCP/DNS/TFTP/SSH services
+  - HTTP/HTTPS for web development
+  - Container services: 8080, 8443, 8090
+  - Quick-share ports: 8000, 5000, 3000
+  - Masquerade for internet access
+  - Reject rule for host protection
+- Default virtual network configured with 192.168.100.0/24 subnet
+- Works on any network (WiFi/Ethernet/hotspots) - no bridge required
+- Enables libvirt services automatically (virtqemud, virtlogd, virtnetworkd, virtstoraged, virtnodedevd)
+- Laptop-friendly development environment
 
 * Sun Aug 2 2026 Jonathon <jonathon@sirius-os> - 1.0.0-1
 - First Stable Release for wolf-os-virtualization
