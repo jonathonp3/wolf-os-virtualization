@@ -1,13 +1,12 @@
 [Unit]
 Description=Wolf-OS libvirt provisioning
 After=local-fs.target
-# Only run if provisioning hasn't been done yet
 ConditionPathExists=!/etc/wolf-os/libvirt-provisioned
 
 [Service]
 Type=oneshot
 User=root
-ExecStart=/usr/libexec/libvirt-provision.sh
+ExecStart=/usr/libexec/wolf-os-virtualization-libvirt-provisioning.sh
 RemainAfterExit=yes
 
 [Install]

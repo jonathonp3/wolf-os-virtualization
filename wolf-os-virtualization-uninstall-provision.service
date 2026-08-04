@@ -1,12 +1,14 @@
 [Unit]
 Description=Wolf-OS Virtualization Uninstall Provisioner
 After=local-fs.target
+# Only run if the uninstaller hasn't been created yet
 ConditionPathExists=!/etc/systemd/system/wolf-os-virtualization-uninstall.service
 
 [Service]
 Type=oneshot
 User=root
-ExecStart=/usr/libexec/wolf-os-virtualization-libvirt-provisioning.sh
+# Execute the uninstall provision script
+ExecStart=/usr/libexec/wolf-os-virtualization-uninstall-provision.sh
 RemainAfterExit=yes
 
 [Install]
