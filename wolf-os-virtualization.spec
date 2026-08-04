@@ -108,16 +108,6 @@ systemctl daemon-reload 2>/dev/null || :
 /usr/lib/systemd/system/multi-user.target.wants/wolf-os-virtualization-uninstall-provision.service
 
 %changelog
-* Mon Aug 03 2026 Jonathon <jonathon@sirius-os> - 1.0.0-6
-- Fix: Add missing Source10 and Source11 definitions
-- Fix: Correct install paths for uninstall service
-- Fix: Add %post and %postun for systemd daemon-reload
-- Fix: Add uninstall service to %files
-- Fix: Typo "Virtualaziation" → "Virtualization"
-- Add: Firewalld reload to uninstall script
-- Add: Call uninstall provision from main provision script
-
-%changelog
 * Mon Aug 03 2026 Jonathon <jonathon@sirius-os> - 1.0.0-5
 - Complete rewrite using my PIA-style systemd provisioning (Silverblue/Atomic compatible)
   - Main provision service runs at boot to copy configs from /usr/share/wolf-os/ to /etc
