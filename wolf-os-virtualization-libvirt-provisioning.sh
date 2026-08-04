@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 # Wolf-OS: libvirt provisioning
 set -euo pipefail
 
@@ -21,16 +21,7 @@ cp /usr/share/wolf-os/libvirt.xml /etc/firewalld/zones/
 echo "🔄 Reloading firewalld..."
 firewall-cmd --reload
 
-# --- 4. Setup libvirt network directories ---
-echo "📦 Configuring libvirt network..."
-mkdir -p /etc/libvirt/qemu/networks
-chmod 700 /etc/libvirt/qemu/networks
-
-# --- 5. Install custom default network (replace any existing) ---
-cp /usr/share/wolf-os/default-net.xml /etc/libvirt/qemu/networks/default.xml
-chmod 600 /etc/libvirt/qemu/networks/default.xml
-
-# --- 6. Enable libvirt services FIRST ---
+# --- 4. Enable libvirt services FIRST ---
 echo "🔧 Enabling libvirt services..."
 systemctl enable --now virtqemud.service 2>/dev/null || :
 systemctl enable --now virtlogd.service 2>/dev/null || :
@@ -38,24 +29,33 @@ systemctl enable --now virtnetworkd.service 2>/dev/null || :
 systemctl enable --now virtstoraged.service 2>/dev/null || :
 systemctl enable --now virtnodedevd.socket 2>/dev/null || :
 
-# --- 7. Wait for libvirt to be ready ---
+# --- 5. Wait for libvirt to be ready ---
 echo "⏳ Waiting for libvirt to be ready..."
-sleep 3
-for i in {1..10}; do
+for i in {1..15}; do
     if virsh net-list --all &>/dev/null; then
         echo "✅ libvirt is ready"
         break
     fi
-    echo "⏳ Waiting... ($i/10)"
+    echo "⏳ Waiting... ($i/15)"
     sleep 2
 done
 
-# --- 8. Remove existing default network if present ---
+# --- 6. Remove existing default network if present ---
 if virsh net-list --all 2>/dev/null | grep -q "default"; then
     echo "🧹 Removing existing default network..."
     virsh net-destroy default 2>/dev/null || :
     virsh net-undefine default 2>/dev/null || :
 fi
+
+# --- 7. Setup libvirt network directories ---
+echo "📦 Configuring libvirt network..."
+mkdir -p /etc/libvirt/qemu/networks
+chmod 700 /etc/libvirt/qemu/networks
+
+# --- 8. Install custom default network ---
+echo "📦 Installing custom network configuration..."
+cp /usr/share/wolf-os/default-net.xml /etc/libvirt/qemu/networks/default.xml
+chmod 600 /etc/libvirt/qemu/networks/default.xml
 
 # --- 9. Define and start network ---
 echo "🌐 Defining default network..."
