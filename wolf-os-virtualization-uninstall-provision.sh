@@ -52,6 +52,10 @@ rm -f /etc/wolf-os/libvirt-provisioned
 rm -f /etc/wolf-os-virtualization-uninstall/wolf-os-virtualization-uninstaller.sh
 rmdir /etc/wolf-os-virtualization-uninstall 2>/dev/null || :
 
+# Remove the service file and its symlink
+rm -f /etc/systemd/system/multi-user.target.wants/wolf-os-virtualization-uninstall.service
+rm -f /etc/systemd/system/wolf-os-virtualization-uninstall.service
+
 echo "✨ Wolf-OS Virtualization has been removed."
 EOF
 
