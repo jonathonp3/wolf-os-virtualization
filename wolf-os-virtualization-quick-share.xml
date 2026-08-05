@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <service>
-  <short>Quick Share</short>
-  <description>Common ports for quick sharing: 8000 (Python), 5000 (Flask), 3000 (React)</description>
+  <short>Quick Share (HTTP)</short>
+  <description>Allows local file sharing and development traffic on port 8000.</description>
   <port protocol="tcp" port="8000"/>
-  <port protocol="tcp" port="5000"/>
-  <port protocol="tcp" port="3000"/>
 </service>

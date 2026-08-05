@@ -6,6 +6,7 @@ This RPM adds the libvirt networking runtime foundation needed for virt-manager 
 
 With these changes, virtnetworkd.service starts cleanly and runs dnsmasq, so libvirt networking behaves as it should. For my use case, manually creating a bridge is no longer necessary.
 
+
 This project is built and hosted via [Fedora COPR](https://copr.fedorainfracloud.org/coprs/jonathonp3/wolf-os/). 
 
 📦 Installation
@@ -25,31 +26,7 @@ rpm-ostree install wolf-os-virtualization
 ```
 
 Reboot to apply changes
-```bash
-systemctl reboot
-```
 
-After reboot, enable and start the services/socket:
-```bash
-sudo systemctl enable --now virtqemud.service
-sudo systemctl enable --now virtlogd.service
-sudo systemctl enable --now virtnetworkd.service
-sudo systemctl enable --now virtstoraged.service
-sudo systemctl enable --now virtnodedevd.socket
-```
-
-## Option B: Virtualization Stack (auto via vendor-layer symlinks)
-
-This package uses hard-coded vendor-layer systemd symlinks and declared systemd dependencies to ensure the required services start on boot.
-
-Note: `systemctl is-enabled virtqemud.service virtlogd.service virtstoraged.service virtnetworkd.service virtnodedevd.socket` may not report enabled because the enablement is implemented in the vendor layer rather than via symlinks under /etc.
-
-Install:
-```bash
-rpm-ostree install wolf-os-virtualization-vendor-symlinks
-```
-
-Reboot to apply changes:
 ```bash
 systemctl reboot
 ```
@@ -64,21 +41,10 @@ Repository URL:
 https://copr.fedorainfracloud.org/coprs/jonathonp3/wolf-os/repo/fedora-44/jonathonp3-wolf-os-fedora-44.repo
 ```
 
-Option A: User-enable after install
+User-enable
 yaml
 ```bash
   - type: rpm-ostree
     install:
       - wolf-os-virtualization
 ```
-
-Option B: Auto via vendor-layer symlinks
-
-
-```bash
-  - type: rpm-ostree
-    install:
-      - wolf-os-virtualization-vendor-symlinks
-```
-
-Choose Option A if you prefer enabling services manually during the build or after the image is deployed , or Option B if you want them started on boot via vendor-layer systemd enablement.

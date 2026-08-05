@@ -2,18 +2,21 @@
 <zone target="ACCEPT">
   <short>libvirt</short>
   <description>
-    Enhanced libvirt zone with masquerade.
+    Community Edition: Enhanced libvirt zone with masquerade.
     Provides NAT for VMs while maintaining host protection.
     
     Optional services available (not enabled by default):
     - container-http (8080)
     - container-https (8443)
     - container-https-alt (8090)
-    - Quick Share (HTTP) (8000)
+    - quick-share (8000, 5000, 3000)
     
     To enable: firewall-cmd --permanent --zone=libvirt --add-service=SERVICE
   </description>
 
+  <rule priority='32767'>
+    <reject/>
+  </rule>
   <protocol value='icmp'/>
   <protocol value='ipv6-icmp'/>
   <service name='dhcp'/>
@@ -24,9 +27,4 @@
   
   <!-- NAT for VM internet access -->
   <masquerade/>
-
-  <rule priority='32767'>
-    <reject/>
-  </rule>
 </zone>
-

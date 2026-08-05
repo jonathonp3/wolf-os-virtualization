@@ -3,7 +3,7 @@
 
 Name:           wolf-os-virtualization
 Version:        1.0.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        User-Enabled Virtualization Stack for Wolf-OS
 License:        GPLv3
 URL:            https://github.com/jonathonp3/wolf-os-virtualization
@@ -35,15 +35,6 @@ Requires:       systemd
 
 %description
 Provides the full libvirt/virtnetworkd runtime foundation for Wolf-OS.
-Includes a custom firewalld zone (wolf-libvirt) with development-friendly features:
-- DHCP/DNS/TFTP/SSH services
-- HTTP/HTTPS for web development
-- Container services: 8080, 8443, 8090
-- Quick-share ports: 8000, 5000, 3000
-- Masquerade for internet access
-- Reject rule for host protection
-- Laptop-friendly - works on WiFi/Ethernet/hotspots
-- Clean uninstall via systemd dormant service
 
 %setup -c -T
 
@@ -108,22 +99,20 @@ systemctl daemon-reload 2>/dev/null || :
 /usr/lib/systemd/system/multi-user.target.wants/wolf-os-virtualization-uninstall-provision.service
 
 %changelog
-* Mon Aug 03 2026 Jonathon <jonathon@sirius-os> - 1.0.0-7
-- Complete rewrite using my PIA-style systemd provisioning (Silverblue/Atomic compatible)
+* Wed Aug 05 2026 Jonathon <jonathon@sirius-os> - 1.0.0-8
+- Complete rewrite using my systemd provisioning (Silverblue/Atomic compatible)
   - Main provision service runs at boot to copy configs from /usr/share/wolf-os/ to /etc
   - Uninstall provision service creates dormant uninstall service at runtime
   - Clean uninstall removes all traces when package is removed
-- Custom libvirt firewalld zone with development-friendly features:
-  - DHCP/DNS/TFTP/SSH services
+  - Custom firewalld profiles:
   - HTTP/HTTPS for web development
   - Container services: 8080, 8443, 8090
-  - Quick-share ports: 8000, 5000, 3000
+  - Quick-share port: 8000
   - Masquerade for internet access
   - Reject rule for host protection
-- Default virtual network configured with 192.168.100.0/24 subnet
-- Works on any network (WiFi/Ethernet/hotspots) - no bridge required
-- Enables libvirt services automatically (virtqemud, virtlogd, virtnetworkd, virtstoraged, virtnodedevd)
-- Laptop-friendly development environment
+  - Default virtual network configured with 192.168.100.0/24 subnet
+  - Enables libvirt services automatically (virtqemud, virtlogd, virtnetworkd, virtstoraged, virtnodedevd)
+
 
 * Sun Aug 2 2026 Jonathon <jonathon@sirius-os> - 1.0.0-1
 - First Stable Release for wolf-os-virtualization
