@@ -23,6 +23,14 @@ set -euo pipefail
 
 echo "🧹 Removing Wolf-OS Virtualization..."
 
+echo "🌐 Removing default network..."
+if virsh net-list --all 2>/dev/null | grep -q "default"; then
+    # Stop if running
+    virsh net-destroy default 2>/dev/null || :
+    # Remove definition
+    virsh net-undefine default 2>/dev/null || :
+fi
+
 # Remove firewalld services
 rm -f /etc/firewalld/services/container-http.xml
 rm -f /etc/firewalld/services/container-https.xml

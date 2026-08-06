@@ -3,7 +3,7 @@
 
 Name:           wolf-os-virtualization
 Version:        1.0.0
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        User-Enabled Virtualization Stack for Wolf-OS
 License:        GPLv3
 URL:            https://github.com/jonathonp3/wolf-os-virtualization
@@ -99,19 +99,37 @@ systemctl daemon-reload 2>/dev/null || :
 /usr/lib/systemd/system/multi-user.target.wants/wolf-os-virtualization-uninstall-provision.service
 
 %changelog
-* Wed Aug 05 2026 Jonathon <jonathon@sirius-os> - 1.0.0-9
-- Complete rewrite using my systemd provisioning (Silverblue/Atomic compatible)
+%changelog
+* Thu Aug 06 2026 Jonathon <jonathon@sirius-os> - 1.0.0-10
+- Complete rewrite using systemd provisioning (Silverblue/Atomic compatible)
   - Main provision service runs at boot to copy configs from /usr/share/wolf-os/ to /etc
   - Uninstall provision service creates dormant uninstall service at runtime
   - Clean uninstall removes all traces when package is removed
-  - Custom firewalld profiles:
+  - Network is properly destroyed and undefined during uninstall for clean reinstalls
+  
+- Custom firewalld zone with development-friendly services:
   - HTTP/HTTPS for web development
   - Container services: 8080, 8443, 8090
   - Quick-share port: 8000
   - Masquerade for internet access
   - Reject rule for host protection
-  - Default virtual network configured with 192.168.100.0/24 subnet
-  - Enables libvirt services automatically (virtqemud, virtlogd, virtnetworkd, virtstoraged, virtnodedevd)
+
+- Virtual network configuration:
+  - Dynamic subnet selection (auto-pivot) avoids conflicts with host networks
+  - Default virtual network configured on first available 192.168.100-150.0/24 subnet
+  - Network autostart enabled at boot
+
+- Automatic service enablement at boot:
+  - virtqemud.service
+  - virtlogd.service
+  - virtnetworkd.service
+  - virtstoraged.service
+  - virtnodedevd.socket
+
+* Sun Aug 2 2026 Jonathon <jonathon@sirius-os> - 1.0.0-1
+- First Stable Release for wolf-os-virtualization
+- Verified compatibility with modular libvirt architecture
+- Custom wolf-libvirt firewalld zone for virbr0
 
 
 * Sun Aug 2 2026 Jonathon <jonathon@sirius-os> - 1.0.0-1
