@@ -3,7 +3,7 @@
 
 Name:           wolf-os-virtualization
 Version:        1.0.0
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        User-Enabled Virtualization Stack for Wolf-OS
 License:        GPLv3
 URL:            https://github.com/jonathonp3/wolf-os-virtualization
@@ -100,12 +100,11 @@ systemctl daemon-reload 2>/dev/null || :
 
 %changelog
 %changelog
-* Thu Aug 06 2026 Jonathon <jonathon@sirius-os> - 1.0.0-10
+* Thu Aug 06 2026 Jonathon <jonathon@sirius-os> - 1.0.0-11
 - Complete rewrite using systemd provisioning (Silverblue/Atomic compatible)
   - Main provision service runs at boot to copy configs from /usr/share/wolf-os/ to /etc
   - Uninstall provision service creates dormant uninstall service at runtime
   - Clean uninstall removes all traces when package is removed
-  - Network is properly destroyed and undefined during uninstall for clean reinstalls
   
 - Custom firewalld zone with development-friendly services:
   - HTTP/HTTPS for web development
