@@ -3,7 +3,7 @@
 
 Name:           wolf-os-virtualization
 Version:        1.0.0
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        User-Enabled Virtualization Stack for Wolf-OS
 License:        GPLv3
 URL:            https://github.com/jonathonp3/wolf-os-virtualization
@@ -99,7 +99,7 @@ systemctl daemon-reload 2>/dev/null || :
 /usr/lib/systemd/system/multi-user.target.wants/wolf-os-virtualization-uninstall-provision.service
 
 %changelog
-* Wed Aug 05 2026 Jonathon <jonathon@sirius-os> - 1.0.0-8
+* Wed Aug 05 2026 Jonathon <jonathon@sirius-os> - 1.0.0-9
 - Complete rewrite using my systemd provisioning (Silverblue/Atomic compatible)
   - Main provision service runs at boot to copy configs from /usr/share/wolf-os/ to /etc
   - Uninstall provision service creates dormant uninstall service at runtime
